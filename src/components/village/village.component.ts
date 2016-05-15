@@ -23,9 +23,12 @@ export class VillageComponent implements OnActivate, AfterViewChecked{
   gitFlow:GitFlow=new GitFlow();
   branchs: Branch[];
   displayVillage:boolean;
-  constructor(private _repoService: RepoService, private _login: LoginComponent) {}
+  constructor(private _repoService: RepoService, private _login: LoginComponent) {
+    console.log("create VillageComponent");
+  }
 
   routerOnActivate(curr: ComponentInstruction ): void {
+    console.log("routerOnActivate");
     let branchName = curr.params['name'];
     this.gitFlow=new GitFlow();
     this.gitFlow.master=curr.params['default_branch'];

@@ -16,7 +16,7 @@ declare var componentHandler;
   templateUrl: './src/components/world/world.component.html',
   styleUrls: ['./src/components/world/world.component.css'],
   directives: [ROUTER_DIRECTIVES, WorldVillageComponent],
-  providers: [ROUTER_PROVIDERS, RepoService, LoginComponent]
+  providers: [RepoService, LoginComponent]
 })
 // @CanActivate(() => tokenNotExpired())
 export class WorldComponent implements OnInit, AfterViewChecked {
@@ -125,7 +125,7 @@ export class WorldComponent implements OnInit, AfterViewChecked {
   }
 
   detail() {
-    this._router.navigate(['/Village', { name: this.repos[index].name, default_branch: this.repos[index].default_branch }]);
+    this._router.navigate(['/Village', { name: this.repos[this.selectedIndex].name, default_branch: this.repos[this.selectedIndex].default_branch }]);
   }
 
 }
