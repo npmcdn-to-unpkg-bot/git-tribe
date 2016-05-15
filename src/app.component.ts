@@ -9,6 +9,7 @@ import {LoginComponent} from './components/login/login.component';
 import {WorldComponent} from './components/world/world.component';
 import {HelpComponent} from './components/help/help.component';
 import {VillageComponent} from './components/village/village.component';
+import {RepoService} from './services/repo.service';
  
 
 declare var componentHandler;
@@ -24,6 +25,19 @@ declare var componentHandler;
             <span>Visually github like a game</span>
           </div>
           <div class="mdl-layout-spacer"></div>
+          <div>
+            <form action="#">
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable" style="margin-right: 10px;">
+                <label class="mdl-button mdl-js-button mdl-button--icon" style="margin: -10px;" for="sample6">
+                  <i class="material-icons">search</i>
+                </label>
+                <div class="mdl-textfield__expandable-holder">
+                  <input class="mdl-textfield__input" type="text" id="sample6" [(ngModel)]="otheruser" (keyup.enter)="searchUser()">
+                  <label class="mdl-textfield__label" for="sample-expandable">Expandable Input</label>
+                </div>
+              </div>
+            </form>
+          </div>
             <div class="snippet-demo-container demo-button demo-button__raised-ripple">
             <button *ngIf="loggedIn()" (click)="goWorld()" class="help mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
               My world
@@ -39,7 +53,7 @@ declare var componentHandler;
     
     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
         for="signout">
-      <li class="mdl-menu__item" (click)="goHelp()">Help</li>
+      <li class="mdl-menu__item" (click)="goHome()">Help</li>
     <li class="mdl-menu__item" (click)="logout()" >Sign out</li>
     </ul>
            </div>
@@ -56,13 +70,13 @@ declare var componentHandler;
       </main>
     </div>
     `,
-	directives: [ROUTER_DIRECTIVES]
+	directives: [ROUTER_DIRECTIVES],
+  providers: [RepoService]
 })
 @RouteConfig([
   { path: '/',      name: 'Login',  component: LoginComponent },
   { path: '/world', name: 'World',  component: WorldComponent },
-  { path: '/help', name: 'Help',  component: HelpComponent },
-  {path: '/village/:name', name:'Village',component: VillageComponent}
+  { path: '/village/:name', name:'Village',component: VillageComponent }
 ])
 export class AppComponent implements AfterViewChecked {
 
@@ -76,7 +90,7 @@ export class AppComponent implements AfterViewChecked {
 
   profile: any;
 
-  constructor(private _router: Router) {
+  constructor(private _router: Router, private _repoService: RepoService) {
     this.profile = JSON.parse(localStorage.getItem('profile'));
   }
 
@@ -110,11 +124,20 @@ export class AppComponent implements AfterViewChecked {
     this._router.navigate(["Login"]);
   }
 
-  goHelp(){
-    this._router.navigate(["Help"]);
+  goWorld(){
+    localStorage.removeItem('otheruser');
+    this._router.navigate(["World"]);
   }
 
-  goWorld(){
-    this._router.navigate(["World"]);
+  searchUser () {
+    if (this.otheruser) {
+      this._repoService.checkUserExists(this.otheruser).subscribe((exists) => {
+        if (exists) {
+          localStorage.setItem('otheruser', this.otheruser);
+          this.otheruser = null;
+          this._router.navigate([ 'World', {_r: Math.random()} ]);
+        }
+      }
+    });
   }
 }

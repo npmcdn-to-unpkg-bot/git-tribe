@@ -17,8 +17,11 @@ export class RepoService {
   constructor(private http: Http) {}
 
   loadRepoByUser(user: string) {
-    // let urlRepos = 'https://api.github.com/users/' + user + '/repos';
-    let urlRepos = 'https://api.github.com/users/johnpapa/repos' + this.tokens[Math.floor(Math.random() )];
+    if (localStorage.getItem('otheruser')) {
+      user = localStorage.getItem('otheruser');
+    }
+    let urlRepos = 'https://api.github.com/users/' + user + '/repos' + this.tokens[Math.floor(Math.random() * 3)];
+    // let urlRepos = 'https://api.github.com/users/johnpapa/repos' + this.tokens[Math.floor(Math.random() )];
     return this.http.get(urlRepos)
       .map(this.extractData)
       .catch(this.handleError);
@@ -30,8 +33,17 @@ export class RepoService {
       .catch(this.handleError);
   }
 
+  checkUserExists (user: string) {
+    return this.http.get( `https://api.github.com/users/${user}` + this.tokens[Math.floor(Math.random() * 3)] )
+      .map( (reponse) => return reponse.status != 404 )
+      .catch( () => return Observable.empty() );
+  }
+
   loadBranch(user: string, repo: string): Observable < Branch[] > {
-    user="johnpapa";
+    if (localStorage.getItem('otheruser')) {
+      user = localStorage.getItem('otheruser');
+    }
+    // user="johnpapa";
     let urlRepos = 'https://api.github.com/repos/' + user + '/' + repo + '/branches';
     return this.http.get(urlRepos)
       .map(this.extractData)

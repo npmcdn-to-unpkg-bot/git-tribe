@@ -34,7 +34,10 @@ System.register(['@angular/core', '@angular/http', 'rxjs/Observable'], function(
                     ];
                 }
                 RepoService.prototype.loadRepoByUser = function (user) {
-                    var urlRepos = 'https://api.github.com/users/johnpapa/repos' + this.tokens[Math.floor(Math.random())];
+                    if (localStorage.getItem('otheruser')) {
+                        user = localStorage.getItem('otheruser');
+                    }
+                    var urlRepos = 'https://api.github.com/users/' + user + '/repos' + this.tokens[Math.floor(Math.random() * 3)];
                     return this.http.get(urlRepos)
                         .map(this.extractData)
                         .catch(this.handleError);
@@ -44,8 +47,15 @@ System.register(['@angular/core', '@angular/http', 'rxjs/Observable'], function(
                         .map(this.extractData)
                         .catch(this.handleError);
                 };
+                RepoService.prototype.checkUserExists = function (user) {
+                    return this.http.get(("https://api.github.com/users/" + user) + this.tokens[Math.floor(Math.random() * 3)])
+                        .map(function (reponse) { return reponse.status != 404; })
+                        .catch(function () { return Observable_1.Observable.empty(); });
+                };
                 RepoService.prototype.loadBranch = function (user, repo) {
-                    user = "johnpapa";
+                    if (localStorage.getItem('otheruser')) {
+                        user = localStorage.getItem('otheruser');
+                    }
                     var urlRepos = 'https://api.github.com/repos/' + user + '/' + repo + '/branches';
                     return this.http.get(urlRepos)
                         .map(this.extractData)
