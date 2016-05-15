@@ -67,5 +67,6 @@ export class Repo {
   notifications_url : String;
   labels_url : String;
   statuses_url: string;
-  mirror_url : String;
+  mirror_url : string;
+  default_branch:string;
 }

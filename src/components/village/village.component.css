@@ -1,4 +1,4 @@
-.world-container {
+.village-container {
 	position: relative;
 	margin: 0 auto;
 	width: 600px;
@@ -8,68 +8,39 @@
 	border-radius: 10px;
 }
 
-.world-container-header {
+.village-container-header {
 	margin: 0 auto;
 	width: 600px;
 	padding-right: 0;
 }
 
-.world-container-header .mdl-tooltip {
+.village-container-header .mdl-tooltip {
 	margin: 0 auto;
 	width: 600px;
 	padding-right: 0;
 }
 
-.world-container-header i {
+.village-container-header i {
 	background-color: #8B9B0D;
 	cursor: pointer;
 }
 
-.world {
+.village {
 	position: relative;
 	margin: auto;
-	background-image: url('/images/world.png');
+	width: 600px;
+	height: 600px;
+	background-image: url('/images/village.png');
+	background-size: 600px 600px;
 	cursor: pointer;
 }
 
-.lake {
-	position: absolute;
-	width: 80px;
-	height: 80px;
-	background-image: url('/images/lake.png');
-	color: lightgreen;
-}
-
-.forest {
-	position: absolute;
-	width: 120px;
-	height: 80px;
-	background-image: url('/images/forest.png');
-	color: lightgreen;
-}
-
-.trees {
-	position: absolute;
-	width: 40px;
-	height: 40px;
-	background-image: url('/images/trees.png');
-	color: lightgreen;
-}
-
-.stones {
-	position: absolute;
-	width: 40px;
-	height: 40px;
-	background-image: url('/images/stones.png');
-	color: lightgreen;
-}
-
-.world-loading {
+.village-loading {
 	width: 40px;
 	margin: 0 auto;
 }
 
-.world-loading div {
+.village-loading div {
 	background-color: white;
 }
 
