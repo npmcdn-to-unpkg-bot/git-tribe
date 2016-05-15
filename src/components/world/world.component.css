@@ -1,3 +1,7 @@
+.mdl-content {
+	position: relative;
+	margin: 0;
+}
 .world-container {
 	position: relative;
 	margin: 0 auto;
@@ -83,4 +87,11 @@
 	background-color: white;
 }
 
+.commiters {
+	width: 100%;
+}
+
+.forks {
+	width: 100%;
+}
 

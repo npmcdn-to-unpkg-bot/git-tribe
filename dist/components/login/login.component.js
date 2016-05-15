@@ -25,8 +25,10 @@ System.register(['@angular/core', '@angular/router-deprecated', 'angular2-jwt'],
             }],
         execute: function() {
             LoginComponent = (function () {
-                function LoginComponent(_router) {
+                function LoginComponent(authHttp, _router, zoneImpl) {
+                    this.authHttp = authHttp;
                     this._router = _router;
+                    this.zoneImpl = zoneImpl;
                     this.lock = new Auth0Lock('6VzIODFHRWvGU14nGK0rMTuDwXBqBNmt', 'gittribe.auth0.com');
                     this.profile = JSON.parse(localStorage.getItem('profile'));
                 }
@@ -37,16 +39,19 @@ System.register(['@angular/core', '@angular/router-deprecated', 'angular2-jwt'],
                         if (err) {
                             throw new Error(err);
                         }
-                        _this.profile = profile;
                         localStorage.setItem('profile', JSON.stringify(profile));
                         localStorage.setItem('id_token', id_token);
+                        _this.zoneImpl.run(function () { return _this.profile = profile; });
                         self.loggedIn();
                     });
                 };
                 LoginComponent.prototype.logout = function () {
+                    var _this = this;
                     localStorage.removeItem('profile');
                     localStorage.removeItem('id_token');
+                    this.zoneImpl.run(function () { return _this.profile = null; });
                     this.loggedIn();
+                    this._router.navigate(['Login']);
                 };
                 LoginComponent.prototype.loggedIn = function () {
                     return angular2_jwt_1.tokenNotExpired();
@@ -56,7 +61,7 @@ System.register(['@angular/core', '@angular/router-deprecated', 'angular2-jwt'],
                         templateUrl: './src/components/login/login.component.html',
                         directives: [router_deprecated_1.ROUTER_DIRECTIVES]
                     }), 
-                    __metadata('design:paramtypes', [router_deprecated_1.Router])
+                    __metadata('design:paramtypes', [angular2_jwt_1.AuthHttp, router_deprecated_1.Router, core_1.NgZone])
                 ], LoginComponent);
                 return LoginComponent;
             }());

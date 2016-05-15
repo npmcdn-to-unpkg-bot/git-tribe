@@ -1,5 +1,31 @@
 <div class="mdl-content" *ngIf="repos">
 	<div class="mdl-layout__header-row world-container-header">
+		<div *ngIf="repos[selectedIndex]">
+			<table class="mdl-data-table mdl-data-table--selectable mdl-shadow--2dp">
+				<tbody>
+		    		<tr>
+		    			<td>
+							<span class="mdl-table__item-primary-content" style="display: inline-flex;">
+						      <i class="material-icons mdl-table__item-avatar">call_split</i>
+						      <span style="margin: 5px;">{{ repos[selectedIndex]?._forks?.length }} Forks</span>
+						    </span>
+					    </td>
+		    			<td>
+							<span class="mdl-table__item-primary-content" style="display: inline-flex;">
+						      <i class="material-icons mdl-table__item-avatar" style="transform: rotate(-90deg)">share</i>
+						      <span style="margin: 5px;">{{ repos[selectedIndex]?._branches?.length }} Branches</span>
+						    </span>
+					    </td>
+		    			<td>
+							<span class="mdl-table__item-primary-content" style="display: inline-flex;">
+						      <i class="material-icons mdl-table__item-avatar">check_circle</i>
+						      <span style="margin: 5px;">{{ repos[selectedIndex]?._commits?.length }} Commits</span>
+						    </span>
+					    </td>
+				    </tr>
+				</tbody>
+			</table>
+		</div>
 		<div class="mdl-layout-spacer"></div>
 		<i id="world_help" class="material-icons mdl-list__item-avatar">info_outline</i>
 		<span for="world_help" class="mdl-tooltip">
@@ -29,11 +55,41 @@
 	</div>
 	<div class="world-container">
 		<div class="world" (mousemove)="move($event)" (mouseup)="reset()" (mouseleave)="reset()" [ngStyle]="{'width': getDiameter() + 'px', 'height': getDiameter() + 'px', 'top': worldtop + 'px', 'left': worldleft + 'px'}">
-			<world-village *ngFor="let repo of repos; let i = index" [repo]="repo" [x]="coordinates[i].x" [y]="coordinates[i].y" [diameter]="getDiameter()" [i]="i"></world-village>
+			<world-village *ngFor="let repo of repos; let i = index" [repo]="repo" [x]="coordinates[i].x" [y]="coordinates[i].y" [diameter]="getDiameter()" [i]="i" (select)="selectVillage($event)"></world-village>
 			<div class="lake" *ngFor="let coordinate of lakesCoordinates; let i = index" [ngStyle]="{'top': (getWorldRadius() - 40 * coordinate.y) + 'px', 'right': (getWorldRadius() - 40 * coordinate.x) + 'px'}"></div>
 			<div class="forest" *ngFor="let coordinate of forestsCoordinates; let i = index" [ngStyle]="{'top': (getWorldRadius() - 40 * coordinate.y) + 'px', 'right': (getWorldRadius() - 40 * coordinate.x) + 'px'}"></div>
 			<div class="trees" *ngFor="let coordinate of treesCoordinates; let i = index" [ngStyle]="{'top': (getWorldRadius() - 40 * coordinate.y) + 'px', 'right': (getWorldRadius() - 40 * coordinate.x) + 'px'}"></div>
 			<div class="stones" *ngFor="let coordinate of stonesCoordinates; let i = index" [ngStyle]="{'top': (getWorldRadius() - 40 * coordinate.y) + 'px', 'right': (getWorldRadius() - 40 * coordinate.x) + 'px'}"></div>
+		</div>
+	</div>
+	<div style="width: 100%; margin: 10px auto 0; text-align: center;" *ngIf="repos[selectedIndex]">
+		<h2>{{ repos[selectedIndex].name }}</h2>
+	</div>
+	<div style="width: 185px; margin: 10px auto 0;" *ngIf="repos[selectedIndex]">
+		<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Repository Details</button>
+	</div>
+	<div class="mdl-grid" *ngIf="repos[selectedIndex]">
+		<div class="mdl-cell mdl-cell--6-col">
+			<div class="commiters mdl-list">
+				<div class="mdl-list__item title"><h4>Commiters</h4></div>
+				<div *ngFor="let commiter of repos[selectedIndex]?.commiters" class="mdl-list__item">
+				    <span class="mdl-list__item-primary-content">
+				      <img class="material-icons mdl-list__item-avatar" [src]="commiter.avatar_url" width="60">
+				      <span>{{ commiter.login }}</span>
+				    </span>
+				</div>
+			</div>
+		</div>
+		<div class="mdl-cell mdl-cell--6-col">
+			<div class="forks mdl-list">
+				<div class="mdl-list__item title"><h4>Forks</h4></div>
+				<div *ngFor="let fork of repos[selectedIndex]?._forks" class="mdl-list__item">
+				    <span class="mdl-list__item-primary-content">
+				      <img class="material-icons mdl-list__item-avatar" [src]="fork.owner.avatar_url" width="60">
+				      <span>{{ fork.owner.login }}</span>
+				    </span>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

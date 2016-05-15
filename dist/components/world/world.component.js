@@ -34,9 +34,11 @@ System.register(['@angular/core', '@angular/router-deprecated', './world.helper'
             }],
         execute: function() {
             WorldComponent = (function () {
-                function WorldComponent(_repoService, _login) {
+                function WorldComponent(_repoService, _login, _router) {
                     this._repoService = _repoService;
                     this._login = _login;
+                    this._router = _router;
+                    this.selectedIndex = -1;
                     this.mousex = 0;
                     this.mousey = 0;
                     this.worldtop = 0;
@@ -93,14 +95,35 @@ System.register(['@angular/core', '@angular/router-deprecated', './world.helper'
                     this.mousex = 0;
                     this.mousey = 0;
                 };
+                WorldComponent.prototype.selectVillage = function (index) {
+                    var _this = this;
+                    this.selectedIndex = index;
+                    this._repoService.load(this.repos[index].commits_url).subscribe(function (items) {
+                        _this.repos[index]._commits = items;
+                        _this.repos[index].commiters = [];
+                        var uniqueIds = [];
+                        items.forEach(function (item) {
+                            if (item.committer && uniqueIds.indexOf(item.committer.id) < 0) {
+                                uniqueIds.push(item.committer.id);
+                                _this.repos[index].commiters.push(item.committer);
+                            }
+                            ;
+                        });
+                    });
+                    this._repoService.load(this.repos[index].forks_url).subscribe(function (items) { return _this.repos[index]._forks = items; });
+                    this._repoService.load(this.repos[index].branches_url).subscribe(function (items) { return _this.repos[index]._branches = items; });
+                };
+                WorldComponent.prototype.detail = function () {
+                    this._router.navigate(['/Village', { name: this.repos[index].name, default_branch: this.repos[index].default_branch }]);
+                };
                 WorldComponent = __decorate([
                     core_1.Component({
                         templateUrl: './src/components/world/world.component.html',
                         styleUrls: ['./src/components/world/world.component.css'],
                         directives: [router_deprecated_1.ROUTER_DIRECTIVES, world_village_component_1.WorldVillageComponent],
-                        providers: [repo_service_1.RepoService, login_component_1.LoginComponent]
+                        providers: [router_deprecated_1.ROUTER_PROVIDERS, repo_service_1.RepoService, login_component_1.LoginComponent]
                     }), 
-                    __metadata('design:paramtypes', [repo_service_1.RepoService, login_component_1.LoginComponent])
+                    __metadata('design:paramtypes', [repo_service_1.RepoService, login_component_1.LoginComponent, router_deprecated_1.Router])
                 ], WorldComponent);
                 return WorldComponent;
             }());

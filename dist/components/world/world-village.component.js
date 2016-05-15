@@ -31,6 +31,7 @@ System.register(['@angular/core', '@angular/router-deprecated', 'angular2-jwt', 
             WorldVillageComponent = (function () {
                 function WorldVillageComponent(_router) {
                     this._router = _router;
+                    this.select = new core_1.EventEmitter();
                 }
                 WorldVillageComponent.prototype.getWorldRadius = function () {
                     return this.diameter / 2 + 20;
@@ -38,8 +39,8 @@ System.register(['@angular/core', '@angular/router-deprecated', 'angular2-jwt', 
                 WorldVillageComponent.prototype.getDate = function (date) {
                     return new Date(date);
                 };
-                WorldVillageComponent.prototype.goToVillage = function (repo) {
-                    this._router.navigate(['/Village', { name: repo.name }]);
+                WorldVillageComponent.prototype.selectVillage = function () {
+                    this.select.emit(this.i);
                 };
                 __decorate([
                     core_1.Input(), 
@@ -61,6 +62,10 @@ System.register(['@angular/core', '@angular/router-deprecated', 'angular2-jwt', 
                     core_1.Input(), 
                     __metadata('design:type', repo_1.Repo)
                 ], WorldVillageComponent.prototype, "repo", void 0);
+                __decorate([
+                    core_1.Output(), 
+                    __metadata('design:type', core_1.EventEmitter)
+                ], WorldVillageComponent.prototype, "select", void 0);
                 WorldVillageComponent = __decorate([
                     core_1.Component({
                         selector: 'world-village',

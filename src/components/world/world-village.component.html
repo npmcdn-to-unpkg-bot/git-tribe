@@ -1,4 +1,4 @@
-<div [attr.id]="'village_' + i" class="world-village" [ngStyle]="{'top': (getWorldRadius() - 40 * y) + 'px', 'right': (getWorldRadius() - 40 * x) + 'px'}"   (click)="goToVillage(repo)"></div>
+<div [attr.id]="'village_' + i" class="world-village" [ngStyle]="{'top': (getWorldRadius() - 40 * y) + 'px', 'right': (getWorldRadius() - 40 * x) + 'px'}" (click)="selectVillage()"></div>
 <div [attr.for]="'village_' + i" class="mdl-tooltip">
 	<div class="demo-card-square mdl-card mdl-shadow--2dp">
 	  <div class="mdl-card__title mdl-card--expand repo-name">

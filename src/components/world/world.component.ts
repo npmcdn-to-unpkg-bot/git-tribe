@@ -16,10 +16,12 @@ declare var componentHandler;
   templateUrl: './src/components/world/world.component.html',
   styleUrls: ['./src/components/world/world.component.css'],
   directives: [ROUTER_DIRECTIVES, WorldVillageComponent],
-  providers: [RepoService, LoginComponent]
+  providers: [ROUTER_PROVIDERS, RepoService, LoginComponent]
 })
 // @CanActivate(() => tokenNotExpired())
 export class WorldComponent implements OnInit, AfterViewChecked {
+
+  selectedIndex: number = -1;
 
   mousex: number = 0;
   mousey: number = 0;
@@ -35,7 +37,7 @@ export class WorldComponent implements OnInit, AfterViewChecked {
   treesCoordinates: Coordinate[];
   stonesCoordinates: Coordinate[];
 
-  constructor(private _repoService: RepoService, private _login: LoginComponent) {}
+  constructor(private _repoService: RepoService, private _login: LoginComponent, private _router: Router) {}
 
   ngOnInit() {
     this._repoService.loadRepoByUser(this._login.profile.nickname).subscribe(repos => {
@@ -99,6 +101,31 @@ export class WorldComponent implements OnInit, AfterViewChecked {
   reset () {
     this.mousex = 0;
     this.mousey = 0;
+  }
+
+  selectVillage (index) {
+    this.selectedIndex = index;
+
+    this._repoService.load(this.repos[index].commits_url).subscribe(items => {
+      this.repos[index]._commits = items;
+      this.repos[index].commiters = [];
+      let uniqueIds = [];
+      items.forEach( item => {
+        if (item.committer && uniqueIds.indexOf(item.committer.id) < 0) {
+          uniqueIds.push(item.committer.id);
+          this.repos[index].commiters.push(item.committer);
+        };
+      });
+    });
+
+    this._repoService.load(this.repos[index].forks_url).subscribe(items => this.repos[index]._forks = items);
+
+    this._repoService.load(this.repos[index].branches_url).subscribe(items => this.repos[index]._branches = items);
+
+  }
+
+  detail() {
+    this._router.navigate(['/Village', { name: this.repos[index].name, default_branch: this.repos[index].default_branch }]);
   }
 
 }

@@ -1,7 +1,7 @@
-import {Component, bind} from '@angular/core';
+import {Component, NgZone} from '@angular/core';
 import {RouteConfig, Router, ROUTER_PROVIDERS, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 import {CanActivate} from '@angular/router-deprecated';
-import {tokenNotExpired, JwtHelper} from 'angular2-jwt';
+import {tokenNotExpired, JwtHelper, AuthHttp} from 'angular2-jwt';
 
 declare var Auth0Lock;
 
@@ -16,7 +16,7 @@ export class LoginComponent {
 
 	profile: any;
 
-	constructor(private _router: Router) {
+	constructor(private authHttp: AuthHttp, private _router: Router, private zoneImpl: NgZone) {
 		this.profile = JSON.parse(localStorage.getItem('profile'));
 	}
 
@@ -27,10 +27,9 @@ export class LoginComponent {
           throw new Error(err);
         }
 
-        this.profile = profile;
-
         localStorage.setItem('profile', JSON.stringify(profile));
         localStorage.setItem('id_token', id_token);
+      	this.zoneImpl.run(() => this.profile = profile);
 
         self.loggedIn();
       });
@@ -39,7 +38,9 @@ export class LoginComponent {
   logout() {
     localStorage.removeItem('profile');
     localStorage.removeItem('id_token');
+    this.zoneImpl.run(() => this.profile = null);
     this.loggedIn();
+    this._router.navigate(['Login']);
   }
 
   loggedIn() {
