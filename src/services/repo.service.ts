@@ -44,7 +44,7 @@ export class RepoService {
       user = localStorage.getItem('otheruser');
     }
     // user="johnpapa";
-    let urlRepos = 'https://api.github.com/repos/' + user + '/' + repo + '/branches';
+    let urlRepos = 'https://api.github.com/repos/' + user + '/' + repo + '/branches'+ this.tokens[Math.floor(Math.random() * 3)];
     return this.http.get(urlRepos)
       .map(this.extractData)
       .catch(this.handleError);
