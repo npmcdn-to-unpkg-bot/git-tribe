@@ -40,17 +40,31 @@ export class WorldComponent implements OnInit, AfterViewChecked {
   constructor(private _repoService: RepoService, private _login: LoginComponent, private _router: Router) {}
 
   ngOnInit() {
-    this._repoService.loadRepoByUser(this._login.profile.nickname).subscribe(repos => {
-      this.repos = repos;
-      this.coordinates = WorldHelper.generateVillagesCoords(this.repos);
-      this.worldtop = (600 - this.getDiameter()) / 2;
-      this.worldleft = (600 - this.getDiameter()) / 2;
+    if (this._login.profile) {
+      this._repoService.loadRepoByUser(this._login.profile.nickname).subscribe(repos => {
+        this.repos = repos;
+        this.coordinates = WorldHelper.generateVillagesCoords(this.repos);
+        this.worldtop = (600 - this.getDiameter()) / 2;
+        this.worldleft = (600 - this.getDiameter()) / 2;
 
-      this.lakesCoordinates = WorldHelper.generateLakesCoords(this.coordinates);
-      this.forestsCoordinates = WorldHelper.generateForestsCoordinates(this.coordinates, this.lakesCoordinates);
-      this.treesCoordinates = WorldHelper.generateTreesCoordinates(this.coordinates, this.lakesCoordinates, this.forestsCoordinates);
-      this.stonesCoordinates = WorldHelper.generateStonesCoordinates(this.coordinates, this.lakesCoordinates, this.forestsCoordinates, this.treesCoordinates);
-    });
+        this.lakesCoordinates = WorldHelper.generateLakesCoords(this.coordinates);
+        this.forestsCoordinates = WorldHelper.generateForestsCoordinates(this.coordinates, this.lakesCoordinates);
+        this.treesCoordinates = WorldHelper.generateTreesCoordinates(this.coordinates, this.lakesCoordinates, this.forestsCoordinates);
+        this.stonesCoordinates = WorldHelper.generateStonesCoordinates(this.coordinates, this.lakesCoordinates, this.forestsCoordinates, this.treesCoordinates);
+      });
+    } else if (localStorage.getItem('otheruser')) {
+      this._repoService.loadRepoByUser(localStorage.getItem('otheruser')).subscribe(repos => {
+        this.repos = repos;
+        this.coordinates = WorldHelper.generateVillagesCoords(this.repos);
+        this.worldtop = (600 - this.getDiameter()) / 2;
+        this.worldleft = (600 - this.getDiameter()) / 2;
+
+        this.lakesCoordinates = WorldHelper.generateLakesCoords(this.coordinates);
+        this.forestsCoordinates = WorldHelper.generateForestsCoordinates(this.coordinates, this.lakesCoordinates);
+        this.treesCoordinates = WorldHelper.generateTreesCoordinates(this.coordinates, this.lakesCoordinates, this.forestsCoordinates);
+        this.stonesCoordinates = WorldHelper.generateStonesCoordinates(this.coordinates, this.lakesCoordinates, this.forestsCoordinates, this.treesCoordinates);
+      });
+    }
   }
 
   ngAfterViewChecked() {

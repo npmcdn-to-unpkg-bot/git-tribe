@@ -46,16 +46,30 @@ System.register(['@angular/core', '@angular/router-deprecated', './world.helper'
                 }
                 WorldComponent.prototype.ngOnInit = function () {
                     var _this = this;
-                    this._repoService.loadRepoByUser(this._login.profile.nickname).subscribe(function (repos) {
-                        _this.repos = repos;
-                        _this.coordinates = world_helper_1.WorldHelper.generateVillagesCoords(_this.repos);
-                        _this.worldtop = (600 - _this.getDiameter()) / 2;
-                        _this.worldleft = (600 - _this.getDiameter()) / 2;
-                        _this.lakesCoordinates = world_helper_1.WorldHelper.generateLakesCoords(_this.coordinates);
-                        _this.forestsCoordinates = world_helper_1.WorldHelper.generateForestsCoordinates(_this.coordinates, _this.lakesCoordinates);
-                        _this.treesCoordinates = world_helper_1.WorldHelper.generateTreesCoordinates(_this.coordinates, _this.lakesCoordinates, _this.forestsCoordinates);
-                        _this.stonesCoordinates = world_helper_1.WorldHelper.generateStonesCoordinates(_this.coordinates, _this.lakesCoordinates, _this.forestsCoordinates, _this.treesCoordinates);
-                    });
+                    if (this._login.profile) {
+                        this._repoService.loadRepoByUser(this._login.profile.nickname).subscribe(function (repos) {
+                            _this.repos = repos;
+                            _this.coordinates = world_helper_1.WorldHelper.generateVillagesCoords(_this.repos);
+                            _this.worldtop = (600 - _this.getDiameter()) / 2;
+                            _this.worldleft = (600 - _this.getDiameter()) / 2;
+                            _this.lakesCoordinates = world_helper_1.WorldHelper.generateLakesCoords(_this.coordinates);
+                            _this.forestsCoordinates = world_helper_1.WorldHelper.generateForestsCoordinates(_this.coordinates, _this.lakesCoordinates);
+                            _this.treesCoordinates = world_helper_1.WorldHelper.generateTreesCoordinates(_this.coordinates, _this.lakesCoordinates, _this.forestsCoordinates);
+                            _this.stonesCoordinates = world_helper_1.WorldHelper.generateStonesCoordinates(_this.coordinates, _this.lakesCoordinates, _this.forestsCoordinates, _this.treesCoordinates);
+                        });
+                    }
+                    else if (localStorage.getItem('otheruser')) {
+                        this._repoService.loadRepoByUser(localStorage.getItem('otheruser')).subscribe(function (repos) {
+                            _this.repos = repos;
+                            _this.coordinates = world_helper_1.WorldHelper.generateVillagesCoords(_this.repos);
+                            _this.worldtop = (600 - _this.getDiameter()) / 2;
+                            _this.worldleft = (600 - _this.getDiameter()) / 2;
+                            _this.lakesCoordinates = world_helper_1.WorldHelper.generateLakesCoords(_this.coordinates);
+                            _this.forestsCoordinates = world_helper_1.WorldHelper.generateForestsCoordinates(_this.coordinates, _this.lakesCoordinates);
+                            _this.treesCoordinates = world_helper_1.WorldHelper.generateTreesCoordinates(_this.coordinates, _this.lakesCoordinates, _this.forestsCoordinates);
+                            _this.stonesCoordinates = world_helper_1.WorldHelper.generateStonesCoordinates(_this.coordinates, _this.lakesCoordinates, _this.forestsCoordinates, _this.treesCoordinates);
+                        });
+                    }
                 };
                 WorldComponent.prototype.ngAfterViewChecked = function () {
                     componentHandler.upgradeDom();

@@ -31,6 +31,10 @@ export class LoginComponent {
         localStorage.setItem('id_token', id_token);
       	this.zoneImpl.run(() => this.profile = profile);
 
+      	if (localStorage.getItem('otheruser')) {
+      		localStorage.removeItem('otheruser');
+      	}
+
         self.loggedIn();
       });
   }

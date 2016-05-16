@@ -42,6 +42,9 @@ System.register(['@angular/core', '@angular/router-deprecated', 'angular2-jwt'],
                         localStorage.setItem('profile', JSON.stringify(profile));
                         localStorage.setItem('id_token', id_token);
                         _this.zoneImpl.run(function () { return _this.profile = profile; });
+                        if (localStorage.getItem('otheruser')) {
+                            localStorage.removeItem('otheruser');
+                        }
                         self.loggedIn();
                     });
                 };
